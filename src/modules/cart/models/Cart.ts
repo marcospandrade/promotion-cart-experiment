@@ -1,12 +1,17 @@
 import { CartItem } from "@modules/cart/models/CartItem";
 import { Product } from "@modules/product/models/Product";
 
+export enum UserType {
+  COMMON = "COMMON",
+  VIP = "VIP",
+}
+
 export class Cart {
   private items: CartItem[] = [];
 
-  constructor(private readonly userType: "COMMON" | "VIP") {}
+  constructor(private readonly userType: UserType) {}
 
-  getUserType(): "COMMON" | "VIP" {
+  getUserType(): UserType {
     return this.userType;
   }
 
