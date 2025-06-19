@@ -16,7 +16,7 @@ describe("🧪 Cart API Integration", () => {
   });
 
   test("returns cart total and applied promotion", async () => {
-    const res = await agent.get("/api/cart/total").query({ userType: "VIP" });
+    const res = await agent.get("/api/cart/total");
 
     assert.equal(res.status, 200);
     assert.ok(res.body.total > 0);
@@ -31,7 +31,7 @@ describe("🧪 Cart API Integration", () => {
   });
 
   test("returns 0 total after clear", async () => {
-    const res = await agent.get("/api/cart/total").query({ userType: "VIP" });
+    const res = await agent.get("/api/cart/total");
 
     assert.equal(res.status, 200);
     assert.equal(res.body.total, 0);
@@ -72,9 +72,7 @@ describe("🧪 Cart API Integration", () => {
       .post("/api/cart/items")
       .send({ productName: "T-shirt", quantity: 1, userType: "COMMON" });
 
-    const res = await agent
-      .get("/api/cart/total")
-      .query({ userType: "COMMON" });
+    const res = await agent.get("/api/cart/total");
 
     const promotionPrice = 35.99 * 2; // Assuming promotion price for T-shirt get 3 for 2 promo
     assert.ok(res.body.total === promotionPrice);
@@ -88,25 +86,19 @@ describe("🧪 Cart API Integration", () => {
       .expect(200);
 
     // Get total after add
-    const before = await agent
-      .get("/api/cart/total")
-      .query({ userType: "COMMON" })
-      .expect(200);
+    const before = await agent.get("/api/cart/total").expect(200);
 
     const totalBefore = before.body.total;
     assert.ok(totalBefore > 0, "Total before should be greater than 0");
 
     // Remove one item
     await agent
-      .delete("/api/cart/items")
-      .send({ productName: "T-shirt", userType: "COMMON" })
+      .delete("/api/cart/remove-item")
+      .send({ productName: "T-shirt" })
       .expect(200);
 
     // Get total after remove
-    const after = await agent
-      .get("/api/cart/total")
-      .query({ userType: "COMMON" })
-      .expect(200);
+    const after = await agent.get("/api/cart/total").expect(200);
 
     const totalAfter = after.body.total;
     assert.ok(

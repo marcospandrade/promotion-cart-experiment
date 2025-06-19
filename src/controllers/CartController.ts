@@ -4,7 +4,6 @@ import { CartRepository } from "@modules/cart/CartRepository";
 import {
   AddItemSchema,
   RemoveItemSchema,
-  GetTotalSchema,
 } from "./schemas/CartControllerSchemas";
 import { UserType } from "@modules/cart/models/Cart";
 
@@ -29,7 +28,7 @@ export class CartController {
     this.router.post("/cart/clear", (req, res) => {
       this.clearCart(req, res);
     });
-    this.router.delete("/cart/items", (req, res) => {
+    this.router.delete("/cart/remove-item", (req, res) => {
       this.removeItem(req, res);
     });
   }
@@ -70,13 +69,22 @@ export class CartController {
       return res.status(422).json({ error: "Invalid input" });
     }
 
-    const { productName, userType } = result.data;
+    const { productName } = result.data;
 
     try {
-      const cart = await this.cartRepository.findOrCreateBySession(
-        sessionId,
-        userType as UserType
-      );
+      const cart = await this.cartRepository.findBySession(sessionId);
+      if (!cart) {
+        return res.status(404).json({ error: "Cart not found" });
+      }
+
+      const productExists = cart
+        .getItems()
+        .some((item) => item.getProduct().getName() === productName);
+
+      if (!productExists) {
+        return res.status(404).json({ error: "Product not found in cart" });
+      }
+
       await this.cartPricingService.removeFromCart(cart, productName);
       await this.cartRepository.save(cart);
 
@@ -89,17 +97,15 @@ export class CartController {
   private getTotal = async (req: Request, res: Response) => {
     const sessionId = req.sessionId;
 
-    const result = GetTotalSchema.safeParse(req.query);
-
-    if (!sessionId || !result.success) {
+    if (!sessionId) {
       return res.status(422).json({ error: "Invalid input" });
     }
-    const { userType } = result.data;
 
-    const cart = await this.cartRepository.findOrCreateBySession(
-      sessionId.toString(),
-      userType as UserType
-    );
+    const cart = await this.cartRepository.findBySession(sessionId.toString());
+
+    if (!cart) {
+      return res.status(404).json({ error: "Cart not found" });
+    }
 
     const total = this.cartPricingService.calculate(cart);
     return res.status(200).json(total);
@@ -120,14 +126,10 @@ export class CartController {
     const sessionId = req.sessionId;
 
     if (!sessionId) {
-      return res.status(400).json({ error: "sessionId required" });
+      return res.status(422).json({ error: "Invalid input" });
     }
 
-    const cart = await this.cartRepository.findOrCreateBySession(
-      sessionId,
-      UserType.COMMON
-    );
-    await this.cartRepository.clear(cart.getSessionId());
+    await this.cartRepository.clear(sessionId);
 
     return res.status(200).json({ message: "Cart cleared." });
   };

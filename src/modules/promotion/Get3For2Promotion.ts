@@ -18,19 +18,19 @@ export class Get3For2Promotion implements Promotion {
       }
     }
 
-    if (allPrices.length === 0) {
-      return {
-        total: 0,
-        appliedPromotion: this.getName(),
-      };
-    }
-
     const discountCount = Math.floor(allPrices.length / 3);
 
     const total = allPrices.reduce(
       (sum, price) => sum.add(price),
       new Money(0)
     );
+
+    if (allPrices.length < 3) {
+      return {
+        total: total.toNumber(),
+        appliedPromotion: "No promotion applied",
+      };
+    }
 
     const discount = allPrices
       .sort((a, b) => a.toNumber() - b.toNumber())

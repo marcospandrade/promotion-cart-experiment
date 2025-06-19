@@ -94,6 +94,6 @@ describe("Get3For2Promotion", () => {
     const result = promo.apply(cart);
 
     assert.ok(new Money(result.total).equals(new Money(0)));
-    assert.equal(result.appliedPromotion, "Get 3 for the Price of 2");
+    assert.equal(result.appliedPromotion, "No promotion applied");
   });
 });

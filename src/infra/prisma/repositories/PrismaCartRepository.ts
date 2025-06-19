@@ -5,6 +5,15 @@ import { Product } from "@modules/product/models/Product";
 import { prisma } from "../client";
 
 export class PrismaCartRepository implements CartRepository {
+  async findBySession(sessionId: string): Promise<Cart | null> {
+    const data = await prisma.cart.findUnique({
+      where: { sessionId },
+      include: { items: { include: { product: true } } },
+    });
+
+    return data ? this.toDomain(data) : null;
+  }
+
   async listCartItems(sessionId: string): Promise<Cart[]> {
     const data = await prisma.cart.findMany({
       where: { sessionId },

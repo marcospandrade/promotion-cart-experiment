@@ -42,6 +42,7 @@ export class Cart {
     const index = this.items.findIndex((item) =>
       item.getProduct().equals(product)
     );
+    
     if (index !== -1) {
       const item = this.items[index];
       if (item.getQuantity() > 1) {
