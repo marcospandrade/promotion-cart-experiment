@@ -20,17 +20,18 @@ export class Get3For2Promotion implements Promotion {
         allPrices.push(price);
       }
     }
-
-    // Sort prices in descending order
-    allPrices.sort((a, b) => b - a);
-    // Calculate total, skipping every 3rd item (the cheapest in the group)
-    let total = 0;
-    for (let i = 0; i < allPrices.length; i++) {
-      // skip every 3rd item (cheapest in group)
-      if ((i + 1) % 3 !== 0) {
-        total += allPrices[i];
-      }
+    if (allPrices.length === 0) {
+      return {
+        total: 0,
+        appliedPromotion: this.getName(),
+      };
     }
+
+    const numFreeItems = Math.floor(allPrices.length / 3);
+    allPrices.sort((a, b) => b - a);
+    allPrices.splice(-numFreeItems, numFreeItems);
+
+    const total = allPrices.reduce((acc, price) => acc + price, 0);
 
     return {
       total: parseFloat(total.toFixed(2)),

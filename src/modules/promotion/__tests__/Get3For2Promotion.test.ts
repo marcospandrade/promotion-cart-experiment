@@ -81,9 +81,16 @@ describe("Get3For2Promotion", () => {
     const promo = new Get3For2Promotion();
     const result = promo.apply(cart);
 
-    // Group 1: Dress, Dress, Jeans → Jeans free (pay 80.75 + 80.75)
-    // Group 2: T-shirt × 3 → one free (pay 35.99 * 2)
-    const expected = 80.75 * 2 + 35.99 * 2;
+    const expected = 80.75 * 2 + 65.5 + 35.99;
     assert.equal(result.total, parseFloat(expected.toFixed(2)));
+  });
+
+  test("should return 0 total for empty cart", () => {
+    const cart = new Cart(UserType.COMMON);
+    const promo = new Get3For2Promotion();
+    const result = promo.apply(cart);
+
+    assert.equal(result.total, 0);
+    assert.equal(result.appliedPromotion, "Get 3 for the Price of 2");
   });
 });
