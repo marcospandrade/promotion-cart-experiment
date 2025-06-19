@@ -16,6 +16,8 @@ A modular, shopping cart system built with Node.js, TypeScript, Express, Prisma,
 * Full unit + integration test coverage
 * Express API interface options
 * Manual validation using Zod schemas
+* Optional observability and CI/CD integration
+* Dockerized environment for easy deployment
 
 ---
 
@@ -111,6 +113,18 @@ start: build run
 npm test         # unit + integration
 npm run coverage # coverage with c8
 ```
+---
+
+## 🔁 CI Pipeline (GitHub Actions)
+
+This project includes a simple CI pipeline via .github/workflows/ci.yml. It does the following:
+* Runs on every push or pull_request to the main branch
+* Checks out the repo and installs dependencies
+* Runs Prisma client generation
+* Type-checks using tsc --noEmit
+* Executes all tests
+
+This ensures that every push is verified and type-safe with passing tests.
 
 ---
 
