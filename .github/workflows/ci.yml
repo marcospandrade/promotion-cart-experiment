@@ -5,13 +5,14 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+  workflow_dispatch:
 
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
 
     env:
-      DATABASE_URL: "file:./prisma/dev.db"
+      DATABASE_URL: "file:./tmp/test.db"
 
     steps:
       - uses: actions/checkout@v4
@@ -19,10 +20,15 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version: "22"
 
       - name: Install dependencies
         run: npm install
+      - name: Use .env.test as .env
+        run: cp .env.test .env
+
+      - name: Create tmp directory for SQLite
+        run: mkdir -p ./tmp
 
       - name: Generate Prisma client
         run: npx prisma generate
