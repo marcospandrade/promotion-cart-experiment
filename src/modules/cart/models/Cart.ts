@@ -9,10 +9,17 @@ export enum UserType {
 export class Cart {
   private items: CartItem[] = [];
 
-  constructor(private readonly userType: UserType) {}
+  constructor(
+    private readonly userType: UserType,
+    private readonly sessionId: string
+  ) {}
 
   getUserType(): UserType {
     return this.userType;
+  }
+
+  getSessionId(): string {
+    return this.sessionId;
   }
 
   getItems(): CartItem[] {

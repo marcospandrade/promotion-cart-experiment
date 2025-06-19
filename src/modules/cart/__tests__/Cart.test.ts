@@ -7,7 +7,7 @@ describe("Cart", () => {
   const tshirt = new Product("T-shirt", 35.99);
 
   test("adds product to cart", () => {
-    const cart = new Cart(UserType.COMMON);
+    const cart = new Cart(UserType.COMMON, "test-session");
     cart.addProduct(tshirt);
 
     const items = cart.getItems();
@@ -16,7 +16,7 @@ describe("Cart", () => {
   });
 
   test("increments quantity when adding same product again", () => {
-    const cart = new Cart(UserType.COMMON);
+    const cart = new Cart(UserType.COMMON, "test-session");
     cart.addProduct(tshirt);
     cart.addProduct(tshirt);
 
@@ -25,7 +25,7 @@ describe("Cart", () => {
   });
 
   test("removes product (quantity = 1)", () => {
-    const cart = new Cart(UserType.COMMON);
+    const cart = new Cart(UserType.COMMON, "test-session");
     cart.addProduct(tshirt);
     cart.removeProduct(tshirt);
 
@@ -33,7 +33,7 @@ describe("Cart", () => {
   });
 
   test("decrements product (quantity > 1)", () => {
-    const cart = new Cart(UserType.COMMON);
+    const cart = new Cart(UserType.COMMON, "test-session");
     cart.addProduct(tshirt);
     cart.addProduct(tshirt);
     cart.removeProduct(tshirt);
@@ -43,7 +43,7 @@ describe("Cart", () => {
   });
 
   test("clear removes all items", () => {
-    const cart = new Cart(UserType.COMMON);
+    const cart = new Cart(UserType.COMMON, "test-session");
     cart.addProduct(tshirt);
     cart.addProduct(new Product("Jeans", 65.5));
 
@@ -52,7 +52,7 @@ describe("Cart", () => {
   });
 
   test("totalItems returns correct sum", () => {
-    const cart = new Cart(UserType.COMMON);
+    const cart = new Cart(UserType.COMMON, "test-session");
     cart.addProduct(tshirt);
     cart.addProduct(tshirt);
     cart.addProduct(new Product("Jeans", 65.5));

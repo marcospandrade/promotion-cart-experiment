@@ -9,7 +9,7 @@ import { Money } from "@shared/Money";
 describe("VIPDiscountPromotion", () => {
   test("applies 15% discount on 1 product", () => {
     const product = new Product("Dress", 80.75);
-    const cart = new Cart(UserType.VIP);
+    const cart = new Cart(UserType.VIP, "test-session");
     cart.addProduct(product);
 
     const promo = new VIPDiscountPromotion();
@@ -24,7 +24,7 @@ describe("VIPDiscountPromotion", () => {
   });
 
   test("applies 15% discount on multiple products", () => {
-    const cart = new Cart(UserType.VIP);
+    const cart = new Cart(UserType.VIP, "test-session");
     cart.addProduct(new Product("T-shirt", 35.99));
     cart.addProduct(new Product("Jeans", 65.5));
     cart.addProduct(new Product("Dress", 80.75));
@@ -39,7 +39,7 @@ describe("VIPDiscountPromotion", () => {
   });
 
   test("returns 0 total when cart is empty", () => {
-    const cart = new Cart(UserType.VIP);
+    const cart = new Cart(UserType.VIP, "test-session");
     const promo = new VIPDiscountPromotion();
 
     const result = promo.apply(cart);
@@ -48,7 +48,7 @@ describe("VIPDiscountPromotion", () => {
   });
 
   test("does not apply to COMMON user (for safety)", () => {
-    const cart = new Cart(UserType.COMMON);
+    const cart = new Cart(UserType.COMMON, "test-session");
     cart.addProduct(new Product("Jeans", 65.5));
 
     const promo = new VIPDiscountPromotion();

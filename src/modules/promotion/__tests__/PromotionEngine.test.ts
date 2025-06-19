@@ -15,7 +15,7 @@ describe("PromotionEngine", () => {
   const dress = new Product("Dress", 80.75);
 
   test("applies Get3For2Promotion for COMMON user", () => {
-    const cart = new Cart(UserType.COMMON);
+    const cart = new Cart(UserType.COMMON, "test-session");
     cart.addProduct(tshirt);
     cart.addProduct(tshirt);
     cart.addProduct(tshirt);
@@ -32,7 +32,7 @@ describe("PromotionEngine", () => {
   });
 
   test("selects best promotion for VIP user", () => {
-    const cart = new Cart(UserType.VIP);
+    const cart = new Cart(UserType.VIP, "test-session");
     cart.addProduct(dress);
     cart.addProduct(dress);
     cart.addProduct(dress);
@@ -50,7 +50,7 @@ describe("PromotionEngine", () => {
   });
 
   test("returns full price if no promotions apply", () => {
-    const cart = new Cart(UserType.COMMON);
+    const cart = new Cart(UserType.COMMON, "test-session");
     cart.addProduct(new Product("T-shirt", 35.99));
 
     const engine = new PromotionEngine([
@@ -64,7 +64,7 @@ describe("PromotionEngine", () => {
   });
 
   test("returns full price if promotion offers no discount", () => {
-    const cart = new Cart(UserType.VIP);
+    const cart = new Cart(UserType.VIP, "test-session");
     cart.addProduct(tshirt);
 
     const engine = new PromotionEngine([new VIPDiscountPromotion()]);
@@ -77,7 +77,7 @@ describe("PromotionEngine", () => {
   });
 
   test("7 items — 2 discounts applied to cheapest items", () => {
-    const cart = new Cart(UserType.COMMON);
+    const cart = new Cart(UserType.COMMON, "test-session");
     const prices = [dress, jeans, tshirt, dress, tshirt, jeans, tshirt];
 
     prices.forEach((p) => cart.addProduct(p));
@@ -96,7 +96,7 @@ describe("PromotionEngine", () => {
   });
 
   test("4 items — 1 discount only", () => {
-    const cart = new Cart(UserType.COMMON);
+    const cart = new Cart(UserType.COMMON, "test-session");
     cart.addProduct(tshirt);
     cart.addProduct(tshirt);
     cart.addProduct(jeans);
@@ -114,7 +114,7 @@ describe("PromotionEngine", () => {
   });
 
   test("multiple discounts applied to lowest prices in mixed cart", () => {
-    const cart = new Cart(UserType.COMMON);
+    const cart = new Cart(UserType.COMMON, "test-session");
     const prices = [10, 10, 20, 30, 30, 40, 50, 50, 60, 70].map(
       (p, i) => new Product(`P${i}`, p)
     );

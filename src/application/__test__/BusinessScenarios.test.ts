@@ -4,6 +4,7 @@ import assert from "node:assert/strict";
 import { CartPricingService } from "../CartPricingService";
 import { Product } from "@modules/product/models/Product";
 import { Cart, UserType } from "@modules/cart/models/Cart";
+import { ProductRepository } from "@modules/product/ProductRepository";
 
 const catalog: Record<string, Product> = {
   "T-shirt": new Product("T-shirt", 35.99),
@@ -47,12 +48,17 @@ const scenarios = [
   },
 ];
 
+const fakeProductRepository: ProductRepository = {
+  findByName: async (name: string) => catalog[name] || null,
+  findAll: async () => Object.values(catalog),
+};
+
 describe("Business Scenarios (Spec Examples)", () => {
-  const pricing = new CartPricingService();
+  const pricing = new CartPricingService(fakeProductRepository);
 
   for (const s of scenarios) {
     test(s.label, () => {
-      const cart = new Cart(s.userType);
+      const cart = new Cart(s.userType, "test-session");
 
       for (const name of s.cartItems) {
         cart.addProduct(catalog[name]);

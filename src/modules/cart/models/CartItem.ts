@@ -15,6 +15,14 @@ export class CartItem {
     return this.quantity;
   }
 
+  getProductId(): number {
+    const id = this.product.getId();
+    if (id === undefined) {
+      throw new Error("Product ID is undefined — required for persistence");
+    }
+    return id;
+  }
+
   incrementQuantity(): void {
     this.quantity += 1;
   }

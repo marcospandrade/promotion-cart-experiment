@@ -9,7 +9,7 @@ describe("Get3For2Promotion", () => {
   test('applies "3 for 2" rule correctly for 3 identical products', () => {
     const promo = new Get3For2Promotion();
     const product = new Product("T-shirt", 35.99);
-    const cart = new Cart(UserType.COMMON);
+    const cart = new Cart(UserType.COMMON, "test-session");
 
     cart.addProduct(product);
     cart.addProduct(product);
@@ -22,7 +22,7 @@ describe("Get3For2Promotion", () => {
   });
 
   test("should apply no discount for 1 product", () => {
-    const cart = new Cart(UserType.COMMON);
+    const cart = new Cart(UserType.COMMON, "test-session");
     cart.addProduct(new Product("T-shirt", 35.99));
 
     const promo = new Get3For2Promotion();
@@ -32,7 +32,7 @@ describe("Get3For2Promotion", () => {
   });
 
   test("should apply no discount for 2 products", () => {
-    const cart = new Cart(UserType.COMMON);
+    const cart = new Cart(UserType.COMMON, "test-session");
     const product = new Product("T-shirt", 35.99);
     cart.addProduct(product);
     cart.addProduct(product);
@@ -44,7 +44,7 @@ describe("Get3For2Promotion", () => {
   });
 
   test("should apply discount twice for 6 items", () => {
-    const cart = new Cart(UserType.COMMON);
+    const cart = new Cart(UserType.COMMON, "test-session");
     const product = new Product("Jeans", 65.5);
     for (let i = 0; i < 6; i++) {
       cart.addProduct(product);
@@ -57,7 +57,7 @@ describe("Get3For2Promotion", () => {
   });
 
   test("should apply discount once and pay 1 leftover", () => {
-    const cart = new Cart(UserType.COMMON);
+    const cart = new Cart(UserType.COMMON, "test-session");
     const product = new Product("Dress", 80.75);
     for (let i = 0; i <= 4; i++) {
       cart.addProduct(product);
@@ -71,7 +71,7 @@ describe("Get3For2Promotion", () => {
   });
 
   test("should apply multiple group discounts on sorted prices", () => {
-    const cart = new Cart(UserType.COMMON);
+    const cart = new Cart(UserType.COMMON, "test-session");
     cart.addProduct(new Product("Dress", 80.75));
     cart.addProduct(new Product("Dress", 80.75));
     cart.addProduct(new Product("Jeans", 65.5));
@@ -89,7 +89,7 @@ describe("Get3For2Promotion", () => {
   });
 
   test("should return 0 total for empty cart", () => {
-    const cart = new Cart(UserType.COMMON);
+    const cart = new Cart(UserType.COMMON, "test-session");
     const promo = new Get3For2Promotion();
     const result = promo.apply(cart);
 
