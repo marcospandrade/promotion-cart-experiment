@@ -7,6 +7,7 @@ import { Cart, UserType } from "@modules/cart/models/Cart";
 import { Get3For2Promotion } from "../Get3For2Promotion";
 import { VIPDiscountPromotion } from "../VipDiscountPromotion";
 import { PromotionEngine } from "../PromotionEngine";
+import { Money } from "@shared/Money";
 
 describe("PromotionEngine", () => {
   const tshirt = new Product("T-shirt", 35.99);
@@ -43,8 +44,8 @@ describe("PromotionEngine", () => {
 
     const result = engine.applyBest(cart);
 
-    // 80.75 * 3 = 242.25 → 15% off = 205.91 vs. "3 for 2" = 161.50
-    assert.equal(result.total, 161.5);
+    // 80.75 * 3 = 242.25 → VIP discount = 205.91 vs "3 for 2" = 161.50
+    assert.ok(new Money(result.total).equals(new Money(161.5)));
     assert.equal(result.appliedPromotion, "Get 3 for the Price of 2");
   });
 
@@ -58,7 +59,7 @@ describe("PromotionEngine", () => {
 
     const result = engine.applyBest(cart);
 
-    assert.equal(result.total, 35.99);
+    assert.ok(new Money(result.total).equals(new Money(35.99)));
     assert.equal(result.appliedPromotion, "No Promotion");
   });
 
@@ -71,7 +72,7 @@ describe("PromotionEngine", () => {
     const expected = parseFloat((35.99 * 0.85).toFixed(2));
     const result = engine.applyBest(cart);
 
-    assert.equal(result.total, expected);
+    assert.ok(new Money(result.total).equals(new Money(expected)));
     assert.equal(result.appliedPromotion, "VIP Discount (15%)");
   });
 
@@ -87,7 +88,11 @@ describe("PromotionEngine", () => {
     const all = prices.map((p) => p.getPrice()).reduce((sum, p) => sum + p, 0);
     const expectedDiscount = tshirt.getPrice() * 2;
 
-    assert.equal(result.total, parseFloat((all - expectedDiscount).toFixed(2)));
+    assert.ok(
+      new Money(result.total).equals(
+        new Money(parseFloat((all - expectedDiscount).toFixed(2)))
+      )
+    );
   });
 
   test("4 items — 1 discount only", () => {
@@ -103,12 +108,13 @@ describe("PromotionEngine", () => {
     const allPrices = [35.99, 35.99, 65.5, 80.75];
     const expected = allPrices.reduce((a, b) => a + b, 0) - 35.99;
 
-    assert.equal(result.total, parseFloat(expected.toFixed(2)));
+    assert.ok(
+      new Money(result.total).equals(new Money(parseFloat(expected.toFixed(2))))
+    );
   });
 
   test("multiple discounts applied to lowest prices in mixed cart", () => {
     const cart = new Cart(UserType.COMMON);
-    // 10 items, sorted by price: [10, 10, 20, 30, 30, 40, 50, 50, 60, 70]
     const prices = [10, 10, 20, 30, 30, 40, 50, 50, 60, 70].map(
       (p, i) => new Product(`P${i}`, p)
     );
@@ -118,8 +124,8 @@ describe("PromotionEngine", () => {
     const result = promo.apply(cart);
 
     const total = prices.map((p) => p.getPrice()).reduce((a, b) => a + b, 0);
-    const discount = 10 + 10 + 20; // 3 items discounted
+    const discount = 10 + 10 + 20;
 
-    assert.equal(result.total, total - discount);
+    assert.ok(new Money(result.total).equals(new Money(total - discount)));
   });
 });

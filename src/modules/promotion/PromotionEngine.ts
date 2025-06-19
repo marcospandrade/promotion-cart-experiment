@@ -1,4 +1,3 @@
-// src/modules/promotion/PromotionEngine.ts
 import { Promotion, PromotionResult } from "./models/Promotion";
 import { Cart } from "@modules/cart/models/Cart";
 

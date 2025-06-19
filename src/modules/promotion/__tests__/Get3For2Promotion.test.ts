@@ -3,6 +3,7 @@ import { Cart, UserType } from "@modules/cart/models/Cart";
 import { Product } from "@modules/product/models/Product";
 import { describe, test } from "node:test";
 import assert from "node:assert/strict";
+import { Money } from "@shared/Money";
 
 describe("Get3For2Promotion", () => {
   test('applies "3 for 2" rule correctly for 3 identical products', () => {
@@ -16,7 +17,7 @@ describe("Get3For2Promotion", () => {
 
     const result = promo.apply(cart);
 
-    assert.equal(result.total, 71.98); // 35.99 * 2
+    assert.ok(new Money(result.total).equals(new Money(71.98))); // 35.99 * 2
     assert.equal(result.appliedPromotion, "Get 3 for the Price of 2");
   });
 
@@ -27,7 +28,7 @@ describe("Get3For2Promotion", () => {
     const promo = new Get3For2Promotion();
     const result = promo.apply(cart);
 
-    assert.equal(result.total, 35.99);
+    assert.ok(new Money(result.total).equals(new Money(35.99)));
   });
 
   test("should apply no discount for 2 products", () => {
@@ -39,7 +40,7 @@ describe("Get3For2Promotion", () => {
     const promo = new Get3For2Promotion();
     const result = promo.apply(cart);
 
-    assert.equal(result.total, 71.98); // 35.99 * 2
+    assert.ok(new Money(result.total).equals(new Money(71.98))); // 35.99 * 2
   });
 
   test("should apply discount twice for 6 items", () => {
@@ -52,7 +53,7 @@ describe("Get3For2Promotion", () => {
     const promo = new Get3For2Promotion();
     const result = promo.apply(cart);
 
-    assert.equal(result.total, 262); // 65.5 * 4
+    assert.ok(new Money(result.total).equals(new Money(262))); // 65.5 * 4
   });
 
   test("should apply discount once and pay 1 leftover", () => {
@@ -66,7 +67,7 @@ describe("Get3For2Promotion", () => {
     const result = promo.apply(cart);
 
     // 80.75 * 3 → one free in 3-for-2 group, + 1 full-price dress
-    assert.equal(result.total, 242.25 + 80.75);
+    assert.ok(new Money(result.total).equals(new Money(242.25 + 80.75)));
   });
 
   test("should apply multiple group discounts on sorted prices", () => {
@@ -82,7 +83,9 @@ describe("Get3For2Promotion", () => {
     const result = promo.apply(cart);
 
     const expected = 80.75 * 2 + 65.5 + 35.99;
-    assert.equal(result.total, parseFloat(expected.toFixed(2)));
+    assert.ok(
+      new Money(result.total).equals(new Money(parseFloat(expected.toFixed(2))))
+    );
   });
 
   test("should return 0 total for empty cart", () => {
@@ -90,7 +93,7 @@ describe("Get3For2Promotion", () => {
     const promo = new Get3For2Promotion();
     const result = promo.apply(cart);
 
-    assert.equal(result.total, 0);
+    assert.ok(new Money(result.total).equals(new Money(0)));
     assert.equal(result.appliedPromotion, "Get 3 for the Price of 2");
   });
 });

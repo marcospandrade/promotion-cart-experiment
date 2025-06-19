@@ -4,6 +4,7 @@ import assert from "node:assert/strict";
 import { VIPDiscountPromotion } from "../VipDiscountPromotion";
 import { Product } from "@modules/product/models/Product";
 import { Cart, UserType } from "@modules/cart/models/Cart";
+import { Money } from "@shared/Money";
 
 describe("VIPDiscountPromotion", () => {
   test("applies 15% discount on 1 product", () => {
@@ -14,7 +15,11 @@ describe("VIPDiscountPromotion", () => {
     const promo = new VIPDiscountPromotion();
     const result = promo.apply(cart);
 
-    assert.equal(result.total, parseFloat((80.75 * 0.85).toFixed(2)));
+    assert.ok(
+      new Money(result.total).equals(
+        new Money(parseFloat((80.75 * 0.85).toFixed(2)))
+      )
+    );
     assert.equal(result.appliedPromotion, "VIP Discount (15%)");
   });
 
@@ -30,7 +35,7 @@ describe("VIPDiscountPromotion", () => {
     const promo = new VIPDiscountPromotion();
     const result = promo.apply(cart);
 
-    assert.equal(result.total, expectedTotal);
+    assert.ok(new Money(result.total).equals(new Money(expectedTotal)));
   });
 
   test("returns 0 total when cart is empty", () => {
@@ -39,7 +44,7 @@ describe("VIPDiscountPromotion", () => {
 
     const result = promo.apply(cart);
 
-    assert.equal(result.total, 0);
+    assert.ok(new Money(result.total).equals(new Money(0)));
   });
 
   test("does not apply to COMMON user (for safety)", () => {
@@ -48,7 +53,7 @@ describe("VIPDiscountPromotion", () => {
 
     const promo = new VIPDiscountPromotion();
 
-    // Safety: If accidentally applied to COMMON, fallback is full price
+    // Safety: If applied to COMMON, fallback is full price
     assert.throws(() => promo.apply(cart), {
       message: /VIPDiscountPromotion can only be applied to VIP carts/,
     });

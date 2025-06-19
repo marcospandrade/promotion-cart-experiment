@@ -1,8 +1,7 @@
-// src/modules/promotion/Get3For2Promotion.ts
-
 import { Promotion, PromotionResult } from "./models/Promotion";
 import { Cart } from "@modules/cart/models/Cart";
 import { CartItem } from "@modules/cart/models/CartItem";
+import { Money } from "@shared/Money";
 
 export class Get3For2Promotion implements Promotion {
   getName(): string {
@@ -10,16 +9,15 @@ export class Get3For2Promotion implements Promotion {
   }
 
   apply(cart: Cart): PromotionResult {
-    const items = cart.getItems();
+    const allPrices: Money[] = [];
 
-    const allPrices: number[] = [];
-
-    for (const item of items) {
-      const price = item.getProduct().getPrice();
+    for (const item of cart.getItems()) {
+      const unitPrice = new Money(item.getProduct().getPrice());
       for (let i = 0; i < item.getQuantity(); i++) {
-        allPrices.push(price);
+        allPrices.push(unitPrice);
       }
     }
+
     if (allPrices.length === 0) {
       return {
         total: 0,
@@ -27,14 +25,20 @@ export class Get3For2Promotion implements Promotion {
       };
     }
 
-    const numFreeItems = Math.floor(allPrices.length / 3);
-    allPrices.sort((a, b) => b - a);
-    allPrices.splice(-numFreeItems, numFreeItems);
+    const discountCount = Math.floor(allPrices.length / 3);
 
-    const total = allPrices.reduce((acc, price) => acc + price, 0);
+    const total = allPrices.reduce(
+      (sum, price) => sum.add(price),
+      new Money(0)
+    );
+
+    const discount = allPrices
+      .sort((a, b) => a.toNumber() - b.toNumber())
+      .slice(0, discountCount)
+      .reduce((sum, p) => sum.add(p), new Money(0));
 
     return {
-      total: parseFloat(total.toFixed(2)),
+      total: total.subtract(discount).toNumber(),
       appliedPromotion: this.getName(),
     };
   }
