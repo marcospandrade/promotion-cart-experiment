@@ -78,6 +78,31 @@ npm run dev
 
 Visit: [http://localhost:3000/api](http://localhost:3000/api)
 
+## 🐳 Docker Support
+
+### Prerequisites
+- Docker installed and running
+- `.env` file at the root with:
+  ```env
+  DATABASE_URL="file:./prisma/dev.db"
+  ```
+
+### Run with Makefile
+```bash
+make start   # builds and runs the container
+```
+
+### Makefile Commands
+```Makefile
+build:
+	docker build -t app .
+
+run:
+	docker run -p 3000:3000 app
+
+start: build run
+```
+
 ---
 
 ## 🧪 Running Tests
@@ -158,6 +183,8 @@ Clears the cart for the current session.
 * Zod
 * Supertest + node\:test + tsx
 * DDD principles
+* Pino logging
+* Docker + Makefile commands
 
 ---
 
