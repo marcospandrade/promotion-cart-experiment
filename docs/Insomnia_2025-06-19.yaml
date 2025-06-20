@@ -1,0 +1,206 @@
+type: collection.insomnia.rest/5.0
+name: Smart Cart
+meta:
+  id: wrk_4d40124d8a0446ed993cb42ea5fc1d34
+  created: 1750282549262
+  modified: 1750372773403
+  description: ""
+collection:
+  - name: Cart
+    meta:
+      id: fld_55cb91ca683045fd8e865f1c4c3fe601
+      created: 1750282555151
+      modified: 1750355949549
+      sortKey: -1750282555151
+      description: ""
+    children:
+      - url: "{{ _.local_url }}/api/cart/items"
+        name: Add Cart Items
+        meta:
+          id: req_7a8007cdebcd42c3bf83f7588adf03b4
+          created: 1750282549309
+          modified: 1750372709991
+          isPrivate: false
+          description: ""
+          sortKey: -1750357119529
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "productName": "Jeans",
+              "quantity": 1,
+              "userType": "VIP"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.2.0
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.local_url }}/api/cart/total"
+        name: List Total Price Cart
+        meta:
+          id: req_93582a94d30845329534e12b341e1f57
+          created: 1750357128782
+          modified: 1750371369460
+          isPrivate: false
+          description: ""
+          sortKey: -1745814457058.5
+        method: GET
+        body:
+          mimeType: application/json
+          text: ""
+        parameters:
+          - id: pair_61919a6597e24af394dc7755978b1403
+            name: userType
+            value: COMMON
+            description: ""
+            disabled: false
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.2.0
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.local_url }}/api/cart/list"
+        name: List Cart
+        meta:
+          id: req_68334ae24f254dde8adaed0122475dd2
+          created: 1750357329053
+          modified: 1750357785163
+          isPrivate: false
+          description: ""
+          sortKey: -1743543125823.25
+        method: GET
+        parameters:
+          - id: pair_42a894f579214c3180db36cf493fad10
+            name: ""
+            value: ""
+            description: ""
+            disabled: false
+        headers:
+          - name: User-Agent
+            value: insomnia/11.2.0
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.local_url }}/api/cart/clear"
+        name: Clear Cart
+        meta:
+          id: req_991544e6c502487a8afd45b056384bd5
+          created: 1750371143971
+          modified: 1750371359203
+          isPrivate: false
+          description: ""
+          sortKey: -1742407460205.625
+        method: POST
+        body:
+          mimeType: application/json
+          text: ""
+        parameters:
+          - id: pair_42a894f579214c3180db36cf493fad10
+            name: ""
+            value: ""
+            description: ""
+            disabled: false
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.2.0
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.local_url }}/api/cart/remove-item"
+        name: Remove Item Cart
+        meta:
+          id: req_df8684c9c58b4356ae4c16dbdf348758
+          created: 1750372805076
+          modified: 1750373497213
+          isPrivate: false
+          description: ""
+          sortKey: -1741839627396.8125
+        method: DELETE
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"productName": "Jeans"
+            }
+        parameters:
+          - id: pair_42a894f579214c3180db36cf493fad10
+            name: ""
+            value: ""
+            description: ""
+            disabled: false
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.2.0
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: Products
+    meta:
+      id: fld_9375755a26f74188907f2518df89d7c6
+      created: 1750373394914
+      modified: 1750373394914
+      sortKey: -1750373394914
+      description: ""
+cookieJar:
+  name: Default Jar
+  meta:
+    id: jar_e3cfb62f0c8fabed4d1a96383a12ee0625c02f83
+    created: 1750282549266
+    modified: 1750372103422
+  cookies:
+    - key: sessionId
+      value: 0c4a4ec7-1090-44b0-b286-b9c489ccce2f
+      maxAge: 604800
+      domain: localhost
+      path: /
+      httpOnly: true
+      hostOnly: true
+      creation: 2025-06-19T22:28:23.422Z
+      lastAccessed: 2025-06-19T22:28:23.422Z
+      id: 6fe6f0e8-896f-4c1e-9bf4-67d61e364ad5
+environments:
+  name: Base Environment
+  meta:
+    id: env_e3cfb62f0c8fabed4d1a96383a12ee0625c02f83
+    created: 1750282549264
+    modified: 1750282590096
+    isPrivate: false
+  data:
+    local_url: http://localhost:3000
