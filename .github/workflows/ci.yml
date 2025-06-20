@@ -30,6 +30,9 @@ jobs:
       - name: Create tmp directory for SQLite
         run: mkdir -p ./tmp
 
+      - name: Migrate and Seed DB
+        run: npx prisma migrate deploy && npx prisma db seed
+
       - name: Generate Prisma client
         run: npx prisma generate
 
